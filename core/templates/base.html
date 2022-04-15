@@ -15,8 +15,10 @@
     
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <nav class="navbar {% if not request.user.is_authenticated %} navbar-expand-lg {% endif %} navbar-light bg-primary">
+      
       <a class="navbar-brand" href="/">Ezeego</a>
+      {%if not request.user.is_authenticated%}
       <button
         class="navbar-toggler"
         type="button"
@@ -30,14 +32,25 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Client</a>
+          <li class="nav-item {% if request.GET.next != '/carrier/' %} active {% endif %}">
+            <a class="nav-link active" aria-current="page" href="/sign-in/?next=/client/">Client</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Carrier</a>
+          <li class="nav-item {% if request.GET.next == '/carrier/' %} active {% endif %}">
+            <a class="nav-link active" aria-current="page" href="/sign-in/?next=/carrier/">Carrier</a>
           </li>
         </ul>
       </div>
+      {%else%}
+
+      
+        <form class='form-inline'>
+          <span class='mr-4'>{{request.user.get_full_name|title}}</span>
+          <a href ='/sign-out' class='btn btn-outline-dark'>Sign Out</a>
+        
+      </form>
+      
+  
+    {%endif%}
     </nav>
 
     {%block content%}{% endblock %}
